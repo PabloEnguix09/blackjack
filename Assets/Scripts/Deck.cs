@@ -96,6 +96,46 @@ public class Deck : MonoBehaviour
          * - Probabilidad de que el jugador obtenga entre un 17 y un 21 si pide una carta
          * - Probabilidad de que el jugador obtenga más de 21 si pide una carta          
          */
+        float casosTotales = values.Length - player.GetComponent<CardHand>().cards.Count - dealer.GetComponent<CardHand>().cards.Count;
+        float valorAsuperarDealer = player.GetComponent<CardHand>().points - values[1];
+        float favorDealerMas = 0;
+        float valorAsuperarPlantarse = player.GetComponent<CardHand>().points;
+        float favorPlantarse = 0;
+        float favorPasarse = 0;
+
+        if (values[1] > valorAsuperarDealer)
+        {
+            favorDealerMas++;
+        }
+        if (values[1] + valorAsuperarPlantarse <= 21 && values[1] + valorAsuperarPlantarse >= 17)
+        {
+            favorPlantarse++;
+        }
+        if (values[1] + valorAsuperarPlantarse > 21)
+        {
+            favorPasarse++;
+        }
+
+        for (int i = player.GetComponent<CardHand>().cards.Count + dealer.GetComponent<CardHand>().cards.Count + 1; i < values.Length; i++)
+        {
+            if (values[i] > valorAsuperarDealer)
+            {
+                favorDealerMas++;
+            }
+            if (values[i] + valorAsuperarPlantarse <= 21 && values[i] + valorAsuperarPlantarse >= 17)
+            {
+                favorPlantarse++;
+            }
+            if(values[i] + valorAsuperarPlantarse > 21)
+            {
+                favorPasarse++;
+            }
+        }
+
+        string probabilidades = "Dealer tenga más: " + (100 * (favorDealerMas / casosTotales)).ToString() + "%" + "\r\n" +
+            "Tener entre 17 y 21: " + (100 * (favorPlantarse / casosTotales)).ToString() + "% \r\n" +
+            "Tener más de 21: " + (100 * (favorPasarse / casosTotales)).ToString() + "%";
+        probMessage.text = probabilidades;
     }
 
     void PushDealer()
