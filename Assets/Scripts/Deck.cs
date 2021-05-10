@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class Deck : MonoBehaviour
@@ -13,8 +14,8 @@ public class Deck : MonoBehaviour
     public Text probMessage;
 
     public int[] values = new int[52];
-    int cardIndex = 0;    
-       
+    int cardIndex = 0;
+
     private void Awake()
     {    
         InitCardValues();        
@@ -47,32 +48,17 @@ public class Deck : MonoBehaviour
 
     private void ShuffleCards()
     {
-        int[] listaBarajados = new int[52];
-
-        int aletorio;
-
-        int longitud = 0;
-
         for (int i = 0; i < 51; i++)
         {
-            aletorio = Random.Range(0, 51);
+            int aleatorizador = Random.Range(0,52);
+            Sprite faceAux = faces[i];
+            int valueAux = values[i];
 
-            for (int j = 0; j < 51; j++)
-            {
-                if (aletorio != listaBarajados[i])
-                {
-                    listaBarajados[longitud] = aletorio;
-                    longitud++;
-                }
-            }
-        }
+            faces[i] = faces[aleatorizador];
+            values[i] = values[aleatorizador];
 
-        Sprite[] facesAux = faces;
-        int[] valuesAux = values;
-        for(int i = 0; i < 51; i++)
-        {
-            faces[i] = facesAux[listaBarajados[i]];
-            values[i] = valuesAux[listaBarajados[i]];
+            faces[aleatorizador] = faceAux;
+            values[aleatorizador] = valueAux;
         }
     }
 
@@ -166,7 +152,7 @@ public class Deck : MonoBehaviour
         stickButton.interactable = true;
         finalMessage.text = "";
         player.GetComponent<CardHand>().Clear();
-        dealer.GetComponent<CardHand>().Clear();          
+        dealer.GetComponent<CardHand>().Clear();
         cardIndex = 0;
         ShuffleCards();
         StartGame();
