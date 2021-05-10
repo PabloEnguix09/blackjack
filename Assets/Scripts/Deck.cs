@@ -71,20 +71,21 @@ public class Deck : MonoBehaviour
             /*TODO:
              * Si alguno de los dos obtiene Blackjack, termina el juego y mostramos mensaje
              */
-        }
-        int puntuacionJugador = comprobarAs(values[0], values[2]);
-        int puntuacionDealer = comprobarAs(values[1], values[3]);
-        if (puntuacionJugador == 21)
-        {
-            Debug.Log("Jugador gana");
-        }
-        else if (puntuacionDealer == 21)
-        {
-            Debug.Log("Dealer gana");
-        }
-        else if (puntuacionJugador == 21 && puntuacionDealer == 21)
-        {
-            Debug.Log("Empate");
+            if (dealer.GetComponent<CardHand>().points == 21)
+            {
+                dealer.GetComponent<CardHand>().cards[0].GetComponent<CardModel>().ToggleFace(true);
+                finalMessage.text = "Has perdido";
+            }
+            else if (player.GetComponent<CardHand>().points == 21)
+            {
+                dealer.GetComponent<CardHand>().cards[0].GetComponent<CardModel>().ToggleFace(true);
+                finalMessage.text = "Has ganado";
+            }
+            else if (dealer.GetComponent<CardHand>().points == 21 && player.GetComponent<CardHand>().points == 21)
+            {
+                dealer.GetComponent<CardHand>().cards[0].GetComponent<CardModel>().ToggleFace(true);
+                finalMessage.text = "Empate";
+            }
         }
     }
 
@@ -158,32 +159,46 @@ public class Deck : MonoBehaviour
     }       
 
     public void Hit()
-    {
-        /*TODO: 
-         * Si estamos en la mano inicial, debemos voltear la primera carta del dealer.
-         */
-        
+    {        
         //Repartimos carta al jugador
         PushPlayer();
 
         /*TODO:
          * Comprobamos si el jugador ya ha perdido y mostramos mensaje
-         */      
+         */  
+        if(player.GetComponent<CardHand>().points > 21)
+        {
+            dealer.GetComponent<CardHand>().cards[0].GetComponent<CardModel>().ToggleFace(true);
+            finalMessage.text = "Has perdido";
+        }
 
     }
 
     public void Stand()
     {
-        /*TODO: 
-         * Si estamos en la mano inicial, debemos voltear la primera carta del dealer.
-         */
-
         /*TODO:
          * Repartimos cartas al dealer si tiene 16 puntos o menos
          * El dealer se planta al obtener 17 puntos o más
          * Mostramos el mensaje del que ha ganado
-         */                
-         
+         */    
+        while(dealer.GetComponent<CardHand>().points < 17)
+        {
+            PushDealer();
+        }
+        dealer.GetComponent<CardHand>().cards[0].GetComponent<CardModel>().ToggleFace(true);
+
+        if(dealer.GetComponent<CardHand>().points <= 21 && dealer.GetComponent<CardHand>().points > player.GetComponent<CardHand>().points)
+        {
+            finalMessage.text = "Has perdido";
+        }
+        else if (player.GetComponent<CardHand>().points <= 21 && player.GetComponent<CardHand>().points > dealer.GetComponent<CardHand>().points)
+        {
+            finalMessage.text = "Has ganado";
+        }
+        else if (dealer.GetComponent<CardHand>().points == player.GetComponent<CardHand>().points)
+        {
+            finalMessage.text = "Empate";
+        }
     }
 
     public void PlayAgain()
@@ -196,18 +211,5 @@ public class Deck : MonoBehaviour
         cardIndex = 0;
         ShuffleCards();
         StartGame();
-    }
-
-    public int comprobarAs(int carta1, int carta2)
-    {
-        if(carta1 == 1 && carta2+11 == 21)
-        {
-            return 21;
-        }
-        if(carta2 == 1 && carta1+11==21)
-        {
-            return 21;
-        }
-        return carta1 + carta2;
     }
 }
