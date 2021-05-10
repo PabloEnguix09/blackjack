@@ -47,16 +47,11 @@ public class Deck : MonoBehaviour
 
     private void ShuffleCards()
     {
-        /*TODO:
-         * Barajar las cartas aleatoriamente.
-         * El método Random.Range(0,n), devuelve un valor entre 0 y n-1
-         * Si lo necesitas, puedes definir nuevos arrays.
-         */
         int[] listaBarajados = new int[52];
 
         int aletorio;
 
-        int index = 0;
+        int longitud = 0;
 
         for (int i = 0; i < 51; i++)
         {
@@ -66,8 +61,8 @@ public class Deck : MonoBehaviour
             {
                 if (aletorio != listaBarajados[i])
                 {
-                    listaBarajados[index] = aletorio;
-                    index++;
+                    listaBarajados[longitud] = aletorio;
+                    longitud++;
                 }
             }
         }
@@ -90,6 +85,20 @@ public class Deck : MonoBehaviour
             /*TODO:
              * Si alguno de los dos obtiene Blackjack, termina el juego y mostramos mensaje
              */
+        }
+        int puntuacionJugador = comprobarAs(values[0], values[2]);
+        int puntuacionDealer = comprobarAs(values[1], values[3]);
+        if (puntuacionJugador == 21)
+        {
+            Debug.Log("Jugador gana");
+        }
+        else if (puntuacionDealer == 21)
+        {
+            Debug.Log("Dealer gana");
+        }
+        else if (puntuacionJugador == 21 && puntuacionDealer == 21)
+        {
+            Debug.Log("Empate");
         }
     }
 
@@ -162,5 +171,17 @@ public class Deck : MonoBehaviour
         ShuffleCards();
         StartGame();
     }
-    
+
+    public int comprobarAs(int carta1, int carta2)
+    {
+        if(carta1 == 1 && carta2+11 == 21)
+        {
+            return 21;
+        }
+        if(carta2 == 1 && carta1+11==21)
+        {
+            return 21;
+        }
+        return carta1 + carta2;
+    }
 }
