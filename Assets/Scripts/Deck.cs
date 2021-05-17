@@ -16,6 +16,12 @@ public class Deck : MonoBehaviour
     public int[] values = new int[52];
     int cardIndex = 0;
 
+    public Button subirApuesta;
+    private int banca = 1000;
+    public Text dinero;
+    private int dineroMesa = 0; 
+    public Text apostado;
+
     private void Awake()
     {    
         InitCardValues();        
@@ -64,6 +70,10 @@ public class Deck : MonoBehaviour
 
     void StartGame()
     {
+        banca -= 10;
+        dinero.text = banca + "€";
+        dineroMesa += 10;
+        apostado.text = dineroMesa + "€";
         for (int i = 0; i < 2; i++)
         {
             PushPlayer();
@@ -75,16 +85,26 @@ public class Deck : MonoBehaviour
             {
                 dealer.GetComponent<CardHand>().cards[0].GetComponent<CardModel>().ToggleFace(true);
                 finalMessage.text = "Has perdido";
+                dineroMesa = 0;
+                apostado.text = dineroMesa + "€";
             }
             else if (player.GetComponent<CardHand>().points == 21)
             {
                 dealer.GetComponent<CardHand>().cards[0].GetComponent<CardModel>().ToggleFace(true);
                 finalMessage.text = "Has ganado";
+                banca += dineroMesa * 2;
+                dinero.text = banca + "€";
+                dineroMesa = 0;
+                apostado.text = dineroMesa + "€";
             }
             else if (dealer.GetComponent<CardHand>().points == 21 && player.GetComponent<CardHand>().points == 21)
             {
                 dealer.GetComponent<CardHand>().cards[0].GetComponent<CardModel>().ToggleFace(true);
                 finalMessage.text = "Empate";
+                banca += dineroMesa;
+                dinero.text = banca + "€";
+                dineroMesa = 0;
+                apostado.text = dineroMesa + "€";
             }
         }
     }
@@ -133,9 +153,9 @@ public class Deck : MonoBehaviour
             }
         }
 
-        string probabilidades = "Dealer tenga más: " + (100 * (favorDealerMas / casosTotales)).ToString() + "%" + "\r\n" +
-            "Tener entre 17 y 21: " + (100 * (favorPlantarse / casosTotales)).ToString() + "% \r\n" +
-            "Tener más de 21: " + (100 * (favorPasarse / casosTotales)).ToString() + "%";
+        string probabilidades = "Dealer tenga más: " + Mathf.Round(100 * (favorDealerMas / casosTotales)).ToString() + "%" + "\r\n" +
+            "Tener entre 17 y 21: " + Mathf.Round(100 * (favorPlantarse / casosTotales)).ToString() + "% \r\n" +
+            "Tener más de 21: " + Mathf.Round(100 * (favorPasarse / casosTotales)).ToString() + "%";
         probMessage.text = probabilidades;
     }
 
@@ -170,6 +190,8 @@ public class Deck : MonoBehaviour
         {
             dealer.GetComponent<CardHand>().cards[0].GetComponent<CardModel>().ToggleFace(true);
             finalMessage.text = "Has perdido";
+            dineroMesa = 0;
+            apostado.text = dineroMesa + "€";
         }
 
     }
@@ -190,14 +212,24 @@ public class Deck : MonoBehaviour
         if(dealer.GetComponent<CardHand>().points <= 21 && dealer.GetComponent<CardHand>().points > player.GetComponent<CardHand>().points)
         {
             finalMessage.text = "Has perdido";
+            dineroMesa = 0;
+            apostado.text = dineroMesa + "€";
         }
-        else if (player.GetComponent<CardHand>().points <= 21 && player.GetComponent<CardHand>().points > dealer.GetComponent<CardHand>().points)
+        else if (player.GetComponent<CardHand>().points <= 21 && player.GetComponent<CardHand>().points > dealer.GetComponent<CardHand>().points || dealer.GetComponent<CardHand>().points > 21)
         {
             finalMessage.text = "Has ganado";
+            banca += dineroMesa * 2;
+            dinero.text = banca + "€";
+            dineroMesa = 0;
+            apostado.text = dineroMesa + "€";
         }
         else if (dealer.GetComponent<CardHand>().points == player.GetComponent<CardHand>().points)
         {
             finalMessage.text = "Empate";
+            banca += dineroMesa;
+            dinero.text = banca + "€";
+            dineroMesa = 0;
+            apostado.text = dineroMesa + "€";
         }
     }
 
@@ -211,5 +243,13 @@ public class Deck : MonoBehaviour
         cardIndex = 0;
         ShuffleCards();
         StartGame();
+    }
+
+    public void Apostar()
+    {
+        banca -= 10;
+        dinero.text = banca + "€";
+        dineroMesa += 10;
+        apostado.text = dineroMesa + "€";
     }
 }
