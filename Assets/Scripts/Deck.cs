@@ -83,6 +83,9 @@ public class Deck : MonoBehaviour
              */
             if (dealer.GetComponent<CardHand>().points == 21)
             {
+                subirApuesta.interactable = false;
+                hitButton.interactable = false;
+                stickButton.interactable = false;
                 dealer.GetComponent<CardHand>().cards[0].GetComponent<CardModel>().ToggleFace(true);
                 finalMessage.text = "Has perdido";
                 dineroMesa = 0;
@@ -90,6 +93,9 @@ public class Deck : MonoBehaviour
             }
             else if (player.GetComponent<CardHand>().points == 21)
             {
+                subirApuesta.interactable = false;
+                hitButton.interactable = false;
+                stickButton.interactable = false;
                 dealer.GetComponent<CardHand>().cards[0].GetComponent<CardModel>().ToggleFace(true);
                 finalMessage.text = "Has ganado";
                 banca += dineroMesa * 2;
@@ -99,6 +105,9 @@ public class Deck : MonoBehaviour
             }
             else if (dealer.GetComponent<CardHand>().points == 21 && player.GetComponent<CardHand>().points == 21)
             {
+                subirApuesta.interactable = false;
+                hitButton.interactable = false;
+                stickButton.interactable = false;
                 dealer.GetComponent<CardHand>().cards[0].GetComponent<CardModel>().ToggleFace(true);
                 finalMessage.text = "Empate";
                 banca += dineroMesa;
@@ -188,6 +197,9 @@ public class Deck : MonoBehaviour
          */  
         if(player.GetComponent<CardHand>().points > 21)
         {
+            subirApuesta.interactable = false;
+            hitButton.interactable = false;
+            stickButton.interactable = false;
             dealer.GetComponent<CardHand>().cards[0].GetComponent<CardModel>().ToggleFace(true);
             finalMessage.text = "Has perdido";
             dineroMesa = 0;
@@ -211,12 +223,18 @@ public class Deck : MonoBehaviour
 
         if(dealer.GetComponent<CardHand>().points <= 21 && dealer.GetComponent<CardHand>().points > player.GetComponent<CardHand>().points)
         {
+            subirApuesta.interactable = false;
+            hitButton.interactable = false;
+            stickButton.interactable = false;
             finalMessage.text = "Has perdido";
             dineroMesa = 0;
             apostado.text = dineroMesa + "€";
         }
         else if (player.GetComponent<CardHand>().points <= 21 && player.GetComponent<CardHand>().points > dealer.GetComponent<CardHand>().points || dealer.GetComponent<CardHand>().points > 21)
         {
+            subirApuesta.interactable = false;
+            hitButton.interactable = false;
+            stickButton.interactable = false;
             finalMessage.text = "Has ganado";
             banca += dineroMesa * 2;
             dinero.text = banca + "€";
@@ -225,6 +243,9 @@ public class Deck : MonoBehaviour
         }
         else if (dealer.GetComponent<CardHand>().points == player.GetComponent<CardHand>().points)
         {
+            subirApuesta.interactable = false;
+            hitButton.interactable = false;
+            stickButton.interactable = false;
             finalMessage.text = "Empate";
             banca += dineroMesa;
             dinero.text = banca + "€";
@@ -235,6 +256,7 @@ public class Deck : MonoBehaviour
 
     public void PlayAgain()
     {
+        subirApuesta.interactable = true;
         hitButton.interactable = true;
         stickButton.interactable = true;
         finalMessage.text = "";
